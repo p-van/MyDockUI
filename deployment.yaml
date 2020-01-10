@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydockui
+  namespace: mydock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      bb: myui
+  template:
+    metadata:
+      labels:
+        bb: myui
+    spec:
+      containers:
+      - name: mydockservice
+        image: ptatv/mydockui:latest
+        env:
+        - name: ASPNETCORE_URLS
+          value: "http://*:80"
+        - name: InfoApiClient__Scheme
+          value: "http"
+        - name: InfoApiClient__Host
+          value: "172.17.0.6"
+        - name: InfoApiClient__Port
+          value: "80"
+
+
+# minikube service mydockui-entrypoint -n mydock
+# kubectl delete deployment mydockui -n mydock
+# kubectl delete service mydockui-entrypoint -n mydock
